@@ -51,8 +51,7 @@ def build_embedding_matrix(word2idx, embed_dim, dat_fname):
     else:
         print('loading word vectors...')
         embedding_matrix = np.zeros((len(word2idx) + 2, embed_dim))  # idx 0 and len(word2idx)+1 are all-zeros
-        fname = './glove.twitter.27B/glove.twitter.27B.' + str(embed_dim) + 'd.txt' \
-            if embed_dim != 300 else './glove.42B.300d.txt'
+        fname = './glove.twitter.27B/glove.twitter.27B.' + str(embed_dim) + 'd.txt' if embed_dim != 300 else './glove.42B.300d.txt'
         word_vec = _load_word_vec(fname, word2idx=word2idx, embed_dim=embed_dim)
         print('building embedding_matrix:', dat_fname)
         for word, i in word2idx.items():
@@ -101,7 +100,7 @@ class Tokenizer(object):
             text = text.lower()
         words = text.split()
         unknownidx = len(self.word2idx)+1
-        sequence = [self.word2idx[w] if w in self.word2idx else unknownidx for w in words]
+        sequence = [self.word2idx[w] if w in self.word2idx else unknownidx for w in words] # ID
         if len(sequence) == 0:
             sequence = [0]
         if reverse:
@@ -158,8 +157,7 @@ class ABSADataset(Dataset):
             text_bert_indices = tokenizer.text_to_sequence("[CLS] " + text_left + " " + aspect + " " + text_right + " [SEP]")
             aspect_bert_indices = tokenizer.text_to_sequence("[CLS] " + aspect + " [SEP]")
 
-            dependency_graph = np.pad(idx2graph[i], \
-                ((0,tokenizer.max_seq_len-idx2graph[i].shape[0]),(0,tokenizer.max_seq_len-idx2graph[i].shape[0])), 'constant')
+            dependency_graph = np.pad(idx2graph[i], ((0,tokenizer.max_seq_len-idx2graph[i].shape[0]),(0,tokenizer.max_seq_len-idx2graph[i].shape[0])), 'constant')
 
             data = {
                 'concat_bert_indices': concat_bert_indices,

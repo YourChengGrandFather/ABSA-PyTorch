@@ -103,6 +103,7 @@ class Instructor:
                 # clear gradient accumulators
                 optimizer.zero_grad()
 
+                # ['left_with_aspect_indices', 'right_with_aspect_indices'],
                 inputs = [batch[col].to(self.opt.device) for col in self.opt.inputs_cols]
                 outputs = self.model(inputs)
                 targets = batch['polarity'].to(self.opt.device)

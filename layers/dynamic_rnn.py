@@ -57,8 +57,8 @@ class DynamicLSTM(nn.Module):
         :return:
         """
         """sort"""
-        x_sort_idx = torch.sort(-x_len)[1].long()
-        x_unsort_idx = torch.sort(x_sort_idx)[1].long()
+        x_sort_idx = torch.sort(-x_len)[1].long() # 按长降序排列，并返回索引【】
+        x_unsort_idx = torch.sort(x_sort_idx)[1].long() #将索引进行升序排列
         x_len = x_len[x_sort_idx]
         x = x[x_sort_idx]
         """pack"""
@@ -71,9 +71,10 @@ class DynamicLSTM(nn.Module):
             out_pack, ht = self.RNN(x_emb_p, None)
             ct = None
         """unsort: h"""
+        #输入的ht ：[D∗num_layers,batch_size,hidden]
         ht = torch.transpose(ht, 0, 1)[
             x_unsort_idx]  # (num_layers * num_directions, batch, hidden_size) -> (batch, ...)
-        ht = torch.transpose(ht, 0, 1)
+        ht = torch.transpose(ht, 0, 1) # (num_layers * num_directions, batch, hidden_size)
 
         if self.only_use_last_hidden_state:
             return ht
